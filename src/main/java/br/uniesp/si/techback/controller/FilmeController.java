@@ -1,6 +1,6 @@
 package br.uniesp.si.techback.controller;
 
-import br.uniesp.si.techback.model.Filme;
+import br.uniesp.si.techback.dto.FilmeDTO;
 import br.uniesp.si.techback.service.FilmeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,17 +21,17 @@ public class FilmeController {
     private final FilmeService filmeService;
 
     @GetMapping
-    public List<Filme> listar() {
+    public List<FilmeDTO> listar() {
         log.info("Listando todos os filmes");
-        List<Filme> filmes = filmeService.listar();
+        List<FilmeDTO> filmes = filmeService.listar();
         log.debug("Total de filmes encontrados: {}", filmes.size());
         return filmes;
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Filme> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<FilmeDTO> buscarPorId(@PathVariable Long id) {
         try {
-            Filme filme = filmeService.buscarPorId(id);
+            FilmeDTO filme = filmeService.buscarPorId(id);
             log.debug("Filme encontrado: {}", filme);
             return ResponseEntity.ok(filme);
         } catch (Exception e) {
@@ -41,10 +41,10 @@ public class FilmeController {
     }
 
     @PostMapping
-    public ResponseEntity<Filme> criar(@Valid @RequestBody Filme filme) {
-        log.info("Recebida requisição para criar novo filme: {}", filme.getTitulo());
+    public ResponseEntity<FilmeDTO> criar(@Valid @RequestBody FilmeDTO filmeDTO) {
+        log.info("Recebida requisição para criar novo filme: {}", filmeDTO.getTitulo());
         try {
-            Filme filmeSalvo = filmeService.salvar(filme);
+            FilmeDTO filmeSalvo = filmeService.salvar(filmeDTO);
             log.info("Filme criado com sucesso. ID: {}, Título: {}", filmeSalvo.getId(), filmeSalvo.getTitulo());
             
             URI location = ServletUriComponentsBuilder
@@ -62,10 +62,10 @@ public class FilmeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Filme> atualizar(@PathVariable Long id, @Valid @RequestBody Filme filme) {
-        log.info("Atualizando filme com ID {}: {}", id, filme);
+    public ResponseEntity<FilmeDTO> atualizar(@PathVariable Long id, @Valid @RequestBody FilmeDTO filmeDTO) {
+        log.info("Atualizando filme com ID {}: {}", id, filmeDTO);
         try {
-            Filme filmeAtualizado = filmeService.atualizar(id, filme);
+            FilmeDTO filmeAtualizado = filmeService.atualizar(id, filmeDTO);
             log.debug("Filme ID {} atualizado com sucesso", id);
             return ResponseEntity.ok(filmeAtualizado);
         } catch (Exception e) {
